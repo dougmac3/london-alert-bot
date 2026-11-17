@@ -196,6 +196,9 @@ def push(title, message, priority=3, tags=None, click=None):
 
 # ---------- main ----------
 def main():
+    if not NTFY_TOPIC and not DRY_RUN:
+        print("NTFY_TOPIC secret not set yet - skipping run.")
+        return
     state = load_state()
     now = dt.datetime.utcnow()
     items, ok_feeds = fetch_all()
