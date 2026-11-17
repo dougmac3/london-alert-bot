@@ -30,6 +30,7 @@ import requests
 # ---------- config ----------
 NTFY_TOPIC = os.environ.get("NTFY_TOPIC", "")
 NTFY_SERVER = os.environ.get("NTFY_SERVER", "https://ntfy.sh").rstrip("/")
+NTFY_TOKEN = os.environ.get("NTFY_TOKEN", "")
 ANTHROPIC_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 ANTHROPIC_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-haiku-5-5")
 STATE_FILE = os.environ.get("STATE_FILE", "state.json")
@@ -192,7 +193,8 @@ def push(title, message, priority=3, tags=None, click=None):
         body["tags"] = tags
     if click:
         body["click"] = click
-    requests.post(NTFY_SERVER, json=body, timeout=20).raise_for_status()
+    headers = {"Authorization": f"Bearer {NTFY_TOKEN}"} if NTFY_TOKEN else {}
+    requests.post(NTFY_SERVER, json=body, headers=headers, timeout=20).raise_for_status()
 
 # ---------- main ----------
 def main():
